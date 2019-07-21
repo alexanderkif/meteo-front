@@ -2,6 +2,10 @@
 
 A Quasar Framework app
 
+## Example gh-pages
+https://alexanderkif.github.io/meteo-front/index.html
+
+
 ## Install the dependencies
 ```bash
 npm install
