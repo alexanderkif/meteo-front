@@ -80,7 +80,7 @@
       </q-card>
 
       <q-inner-loading :showing="visible">
-        <q-spinner-gears size="100px" color="primary" />
+        <q-spinner-gears size="20vh" color="primary" />
       </q-inner-loading>
     </q-page>
   </q-page>
@@ -125,38 +125,36 @@ export default {
   created() {
     this.visible = true;
     this.showReturnData = false;
-    setTimeout(() => {
-      this.$axios.get('https://meteo.alexanderkif.now.sh')
-        .then((response) => {
-          console.log(response.data);
-          this.temperature = response.data.lastDataset.temperature;
-          this.humidity = response.data.lastDataset.humidity;
-          this.pressure = response.data.lastDataset.pressure;
-          this.altitude = response.data.lastDataset.altitude;
-          const created = new Date(response.data.lastDataset.created);
-          this.year = created.getFullYear();
-          this.month = created.getMonth() + 1;
-          if (+this.month < 10) this.month = `0${this.month}`;
-          this.date = created.getDate();
-          if (+this.date < 10) this.date = `0${this.date}`;
-          this.hours = created.getHours();
-          if (+this.hours < 10) this.hours = `0${this.hours}`;
-          this.minutes = created.getMinutes();
-          if (+this.minutes < 10) this.minutes = `0${this.minutes}`;
-          this.visible = false;
-          this.showReturnData = true;
-        })
-        .catch((err) => {
-          this.lorem = err;
-          console.log(err);
-          this.$q.notify({
-            color: 'negative',
-            position: 'top',
-            message: 'Loading failed',
-            icon: 'report_problem',
-          });
+    this.$axios.get('https://meteo.alexanderkif.now.sh')
+      .then((response) => {
+        console.log(response.data);
+        this.temperature = response.data.lastDataset.temperature;
+        this.humidity = response.data.lastDataset.humidity;
+        this.pressure = response.data.lastDataset.pressure;
+        this.altitude = response.data.lastDataset.altitude;
+        const created = new Date(response.data.lastDataset.created);
+        this.year = created.getFullYear();
+        this.month = created.getMonth() + 1;
+        if (+this.month < 10) this.month = `0${this.month}`;
+        this.date = created.getDate();
+        if (+this.date < 10) this.date = `0${this.date}`;
+        this.hours = created.getHours();
+        if (+this.hours < 10) this.hours = `0${this.hours}`;
+        this.minutes = created.getMinutes();
+        if (+this.minutes < 10) this.minutes = `0${this.minutes}`;
+        this.visible = false;
+        this.showReturnData = true;
+      })
+      .catch((err) => {
+        this.lorem = err;
+        console.log(err);
+        this.$q.notify({
+          color: 'negative',
+          position: 'top',
+          message: 'Loading failed',
+          icon: 'report_problem',
         });
-    }, 3000);
+      });
   },
 };
 </script>
