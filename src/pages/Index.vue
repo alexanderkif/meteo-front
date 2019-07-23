@@ -127,7 +127,6 @@ export default {
     this.showReturnData = false;
     this.$axios.get('https://meteo.alexanderkif.now.sh')
       .then((response) => {
-        console.log(response.data);
         this.temperature = response.data.lastDataset.temperature;
         this.humidity = response.data.lastDataset.humidity;
         this.pressure = response.data.lastDataset.pressure;

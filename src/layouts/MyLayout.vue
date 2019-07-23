@@ -72,14 +72,19 @@ export default {
       leftDrawerOpen: this.$q.platform.is.desktop,
       navs: [
         {
-          label: 'Last meteo',
-          icon: 'image',
+          label: 'Last meteo data',
+          icon: 'wb_sunny',
           to: '/',
         },
         {
           label: 'Last 3 hours',
-          icon: 'brush',
+          icon: 'looks_3',
           to: '/charts',
+        },
+        {
+          label: 'Last 3 days',
+          icon: 'filter_3',
+          to: '/charts3d',
         },
       ],
     };

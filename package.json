@@ -11,7 +11,7 @@
     "build": "quasar build",
     "build:pwa": "quasar build -m pwa",
     "lint": "eslint --ext .js,.vue src",
-    "test": "echo \"No test specified\" && exit 0",    
+    "test": "echo \"No test specified\" && exit 0",
     "deploy": "gh-pages -d dist/spa"
   },
   "dependencies": {
@@ -27,7 +27,7 @@
     "eslint": "^5.16.0",
     "eslint-loader": "^2.2.1",
     "eslint-plugin-typescript": "^0.14.0",
-    "eslint-plugin-vue": "^5.0.0",
+    "eslint-plugin-vue": "^5.2.3",
     "gh-pages": "^2.0.1",
     "node-sass": "^4.12.0",
     "sass-loader": "^7.1.0",
