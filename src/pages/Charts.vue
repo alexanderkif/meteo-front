@@ -63,14 +63,10 @@ export default {
       .then((response) => {
         const start = new Date(response.data.start);
         this.year = start.getFullYear();
-        this.month = start.getMonth() + 1;
-        this.addZeroIfNeed(this.month);
-        this.date = start.getDate();
-        this.addZeroIfNeed(this.date);
+        this.month = this.addZeroIfNeed(start.getMonth() + 1);
+        this.date = this.addZeroIfNeed(start.getDate());
         this.hours = start.getHours();
-        this.addZeroIfNeed(this.hours);
-        this.minutes = start.getMinutes();
-        this.addZeroIfNeed(this.minutes);
+        this.minutes = this.addZeroIfNeed(start.getMinutes());
 
         const { datasets } = response.data;
         datasets.forEach((dataset) => {
@@ -123,7 +119,8 @@ export default {
   },
   methods: {
     addZeroIfNeed(date) {
-      if (+date < 10) date = `0${date}`;
+      if (+date < 10) return `0${date}`;
+      return date;
     },
     getChartCfg(labelChart, dataset, color, labelY) {
       return {

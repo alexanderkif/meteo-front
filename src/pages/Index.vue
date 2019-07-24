@@ -133,14 +133,10 @@ export default {
         this.altitude = response.data.lastDataset.altitude;
         const created = new Date(response.data.lastDataset.created);
         this.year = created.getFullYear();
-        this.month = created.getMonth() + 1;
-        if (+this.month < 10) this.month = `0${this.month}`;
-        this.date = created.getDate();
-        if (+this.date < 10) this.date = `0${this.date}`;
+        this.month = this.addZeroIfNeed(created.getMonth() + 1);
+        this.date = this.addZeroIfNeed(created.getDate());
         this.hours = created.getHours();
-        if (+this.hours < 10) this.hours = `0${this.hours}`;
-        this.minutes = created.getMinutes();
-        if (+this.minutes < 10) this.minutes = `0${this.minutes}`;
+        this.minutes = this.addZeroIfNeed(created.getMinutes());
         this.visible = false;
         this.showReturnData = true;
       })
@@ -154,6 +150,12 @@ export default {
           icon: 'report_problem',
         });
       });
+  },
+  methods: {
+    addZeroIfNeed(date) {
+      if (+date < 10) return `0${date}`;
+      return date;
+    },
   },
 };
 </script>
