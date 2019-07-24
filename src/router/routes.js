@@ -7,6 +7,7 @@ const routes = [
       { path: '', component: () => import('pages/Index.vue') },
       { path: '/charts', component: () => import('pages/Charts.vue') },
       { path: '/charts3d', component: () => import('pages/Charts3d.vue') },
+      { path: '/charts-range', component: () => import('pages/ChartsRange.vue') },
     ],
   },
 ];

@@ -86,6 +86,11 @@ export default {
           icon: 'filter_3',
           to: '/charts3d',
         },
+        {
+          label: 'Range (max 30 days)',
+          icon: 'date_range',
+          to: '/charts-range',
+        },
       ],
     };
   },

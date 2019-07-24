@@ -54,6 +54,10 @@ module.exports = function (ctx) {
         'QFooter',
         'QTabs',
         'QRouteTab',
+        'QDate',
+        'QTime',
+        'QInput',
+        'QPopupProxy',
       ],
 
       directives: [
