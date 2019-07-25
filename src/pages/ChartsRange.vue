@@ -5,7 +5,7 @@
     leave-active-class="animated fadeOut"
   >
     <q-page class="flex flex-center">
-      <div class="page-date text-center" v-show="showReturnData">
+      <div class="page-date text-center">
         From
         <div class="q-pa-md" style="max-width: 300px; display: inline-block">
           <q-input filled v-model="dateFrom">
@@ -54,11 +54,12 @@
           <q-btn color="primary" label="Get data" @click="getData"/>
         </div>
       </div>
+      <div id="error" class="text-h4 text-negative"></div>
       <canvas id="temperatureChart" width="400" height="100" v-show="showReturnData"></canvas>
       <canvas id="humidityChart" width="400" height="100" v-show="showReturnData"></canvas>
       <canvas id="pressureChart" width="400" height="100" v-show="showReturnData"></canvas>
       <q-inner-loading :showing="visible">
-        <q-spinner-gears size="20vh" color="primary" />
+        <q-spinner-gears size="10vh" color="primary" />
       </q-inner-loading>
     </q-page>
   </transition>
@@ -79,11 +80,13 @@
     font-size: 2rem;
   }
 }
+// .error {
+//   font-size: 2rem;
+// }
 </style>
 
 <script>
 import Chart from 'chart.js';
-import { setInterval } from 'timers';
 import moment from 'moment';
 
 export default {
@@ -103,6 +106,9 @@ export default {
       showReturnData: true,
       dateFrom: moment(new Date(new Date() - 1000 * 60 * 60 * 24 * 30).toISOString()).format('YYYY-MM-DD HH:mm'),
       dateTo: moment(new Date().toISOString()).format('YYYY-MM-DD HH:mm'),
+      temperatureChart: null,
+      humidityChart: null,
+      pressureChart: null,
     };
   },
   methods: {
@@ -113,12 +119,26 @@ export default {
       this.humidity = [];
       this.pressure = [];
       this.altitude = [];
-      console.log(`https://meteo.alexanderkif.now.sh/data?start=${this.dateFrom}&finish=${this.dateTo}`);
       this.$axios
         .get(`https://meteo.alexanderkif.now.sh/data?start=${this.dateFrom}&finish=${this.dateTo}`)
         .then((response) => {
+          const err = document.getElementById('error');
+          if (response.data.result) {
+            this.showReturnData = false;
+            this.visible = false;
+            err.innerText = response.data.result;
+            return;
+          }
+          if (response.data.count === 0) {
+            this.showReturnData = false;
+            this.visible = false;
+            err.innerText = 'No data to show in the range.';
+            return;
+          }
+          this.showReturnData = true;
+          err.innerText = '';
           const { datasets } = response.data;
-          console.log(response.data);
+          // console.log(response.data);
           datasets.forEach((dataset) => {
             this.temperature.push({
               t: new Date(dataset.created).valueOf(),
@@ -135,30 +155,24 @@ export default {
             this.altitude.push({ x: dataset.created, y: +dataset.altitude });
           });
 
-          const ctxTemperature = document.getElementById('temperatureChart');
-          const temperatureChart = new Chart(ctxTemperature,
+          if (this.temperatureChart) this.temperatureChart.destroy();
+          if (this.humidityChart) this.humidityChart.destroy();
+          if (this.pressureChart) this.pressureChart.destroy();
+
+          this.temperatureChart = new Chart(document.getElementById('temperatureChart'),
             this.getChartCfg('Temperature', this.temperature, 'red', 'Temperature, *C'));
 
-          const ctxHumidity = document.getElementById('humidityChart');
-          const humidityChart = new Chart(ctxHumidity,
+          this.humidityChart = new Chart(document.getElementById('humidityChart'),
             this.getChartCfg('Humidity', this.humidity, 'blue', 'Humidity, %'));
 
-          const ctxPressure = document.getElementById('pressureChart');
-          const pressureChart = new Chart(ctxPressure,
+          this.pressureChart = new Chart(document.getElementById('pressureChart'),
             this.getChartCfg('Pressure', this.pressure, 'green', 'Pressure, mmHg'));
 
-          setInterval(() => {
-            temperatureChart.update();
-            humidityChart.update();
-            pressureChart.update();
-          }, 1000 * 60 * 5);
-
           this.visible = false;
-          this.showReturnData = true;
         })
         .catch((err) => {
           this.lorem = err;
-          console.log(err);
+          // console.log(err);
           this.$q.notify({
             color: 'negative',
             position: 'top',
