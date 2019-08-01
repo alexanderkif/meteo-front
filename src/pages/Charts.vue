@@ -36,6 +36,7 @@
 </style>
 
 <script>
+/* eslint-disable no-underscore-dangle */
 import Chart from 'chart.js';
 import { setInterval } from 'timers';
 
@@ -71,18 +72,18 @@ export default {
         const { datasets } = response.data;
         datasets.forEach((dataset) => {
           this.temperature.push({
-            t: new Date(dataset.created).valueOf(),
+            t: new Date(dataset._id).valueOf(),
             y: +dataset.temperature,
           });
           this.humidity.push({
-            t: new Date(dataset.created).valueOf(),
+            t: new Date(dataset._id).valueOf(),
             y: +dataset.humidity,
           });
           this.pressure.push({
-            t: new Date(dataset.created).valueOf(),
+            t: new Date(dataset._id).valueOf(),
             y: +dataset.pressure,
           });
-          this.altitude.push({ x: dataset.created, y: +dataset.altitude });
+          this.altitude.push({ x: dataset._id, y: +dataset.altitude });
         });
 
         const ctxTemperature = document.getElementById('temperatureChart');
