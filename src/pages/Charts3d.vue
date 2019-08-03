@@ -39,6 +39,7 @@
 /* eslint-disable no-underscore-dangle */
 import Chart from 'chart.js';
 import { setInterval } from 'timers';
+import moment from 'moment';
 
 export default {
   name: 'MeteoCharts3d',
@@ -132,7 +133,7 @@ export default {
             borderColor: color,
             data: dataset,
             type: 'line',
-            pointRadius: 0,
+            pointRadius: 1,
             fill: false,
             // lineTension: 0,
             borderWidth: 2,
@@ -168,6 +169,11 @@ export default {
             intersect: false,
             mode: 'index',
             callbacks: {
+              title(tooltipItems, myData) {
+                const obj = Object.assign({},
+                  myData.datasets[tooltipItems[0].datasetIndex].data[tooltipItems[0].index]);
+                return moment(new Date(obj.t).toISOString()).format('YYYY-MM-DD HH:mm');
+              },
               label(tooltipItem, myData) {
                 let label = myData.datasets[tooltipItem.datasetIndex].label || '';
                 if (label) {

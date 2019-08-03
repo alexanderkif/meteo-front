@@ -39,6 +39,7 @@
 /* eslint-disable no-underscore-dangle */
 import Chart from 'chart.js';
 import { setInterval } from 'timers';
+import moment from 'moment';
 
 export default {
   name: 'MeteoCharts',
@@ -58,8 +59,6 @@ export default {
     };
   },
   created() {
-    // const START = new Date() - 1000 * 60 * 60 * 3;
-    // this.$axios.get(`https://meteo.alexanderkif.now.sh/data?start=${START}`)
     this.$axios.get('https://meteo.alexanderkif.now.sh/data')
       .then((response) => {
         const start = new Date(response.data.start);
@@ -169,6 +168,11 @@ export default {
             intersect: false,
             mode: 'index',
             callbacks: {
+              title(tooltipItems, myData) {
+                const obj = Object.assign({},
+                  myData.datasets[tooltipItems[0].datasetIndex].data[tooltipItems[0].index]);
+                return moment(new Date(obj.t).toISOString()).format('YYYY-MM-DD HH:mm');
+              },
               label(tooltipItem, myData) {
                 let label = myData.datasets[tooltipItem.datasetIndex].label || '';
                 if (label) {

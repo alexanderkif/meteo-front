@@ -80,9 +80,6 @@
     font-size: 2rem;
   }
 }
-// .error {
-//   font-size: 2rem;
-// }
 </style>
 
 <script>
@@ -105,7 +102,8 @@ export default {
       minutes: null,
       visible: false,
       showReturnData: true,
-      dateFrom: moment(new Date(new Date() - 1000 * 60 * 60 * 24 * 30).toISOString()).format('YYYY-MM-DD HH:mm'),
+      dateFrom: moment(new Date(new Date() - 1000 * 60 * 60 * 24 * 30).toISOString())
+        .format('YYYY-MM-DD HH:mm'),
       dateTo: moment(new Date().toISOString()).format('YYYY-MM-DD HH:mm'),
       temperatureChart: null,
       humidityChart: null,
@@ -141,33 +139,43 @@ export default {
           const { datasets } = response.data;
           // console.log(response.data);
           datasets.forEach((dataset) => {
+            const timezone = (new Date().getTimezoneOffset()) * 60 * 1000;
+            const date = new Date(Date.parse(dataset._id) + timezone);
             this.temperature.push({
-              t: new Date(dataset._id).valueOf(),
+              t: new Date(date).valueOf(),
               y: +dataset.temperature,
             });
             this.humidity.push({
-              t: new Date(dataset._id).valueOf(),
+              t: new Date(date).valueOf(),
               y: +dataset.humidity,
             });
             this.pressure.push({
-              t: new Date(dataset._id).valueOf(),
+              t: new Date(date).valueOf(),
               y: +dataset.pressure,
             });
-            this.altitude.push({ x: dataset._id, y: +dataset.altitude });
+            this.altitude.push({ x: date, y: +dataset.altitude });
           });
+
+          let scaleFormat = { minute: 'D MMM H:mm' };
+          if (this.temperature[1].t - this.temperature[0].t >= 3 * 60 * 60 * 1000) {
+            scaleFormat = { hour: 'D MMM HH' };
+          }
+          if (this.temperature[1].t - this.temperature[0].t >= 24 * 60 * 60 * 1000) {
+            scaleFormat = { day: 'D MMM' };
+          }
 
           if (this.temperatureChart) this.temperatureChart.destroy();
           if (this.humidityChart) this.humidityChart.destroy();
           if (this.pressureChart) this.pressureChart.destroy();
 
           this.temperatureChart = new Chart(document.getElementById('temperatureChart'),
-            this.getChartCfg('Temperature', this.temperature, 'red', 'Temperature, *C'));
+            this.getChartCfg('Temperature', this.temperature, 'red', 'Temperature, *C', scaleFormat));
 
           this.humidityChart = new Chart(document.getElementById('humidityChart'),
-            this.getChartCfg('Humidity', this.humidity, 'blue', 'Humidity, %'));
+            this.getChartCfg('Humidity', this.humidity, 'blue', 'Humidity, %', scaleFormat));
 
           this.pressureChart = new Chart(document.getElementById('pressureChart'),
-            this.getChartCfg('Pressure', this.pressure, 'green', 'Pressure, mmHg'));
+            this.getChartCfg('Pressure', this.pressure, 'green', 'Pressure, mmHg', scaleFormat));
 
           this.visible = false;
         })
@@ -186,7 +194,7 @@ export default {
       if (+date < 10) return `0${date}`;
       return date;
     },
-    getChartCfg(labelChart, dataset, color, labelY) {
+    getChartCfg(labelChart, dataset, color, labelY, scaleFormat) {
       return {
         type: 'line',
         data: {
@@ -196,7 +204,7 @@ export default {
             borderColor: color,
             data: dataset,
             type: 'line',
-            pointRadius: 0,
+            pointRadius: 1,
             fill: false,
             // lineTension: 0,
             borderWidth: 2,
@@ -208,9 +216,7 @@ export default {
               type: 'time',
               distribution: 'series',
               time: {
-                displayFormats: {
-                  minute: 'D MMM H:mm',
-                },
+                displayFormats: scaleFormat,
               },
               ticks: {
                 source: 'data',
@@ -232,6 +238,11 @@ export default {
             intersect: false,
             mode: 'index',
             callbacks: {
+              title(tooltipItems, myData) {
+                const obj = Object.assign({},
+                  myData.datasets[tooltipItems[0].datasetIndex].data[tooltipItems[0].index]);
+                return moment(new Date(obj.t).toISOString()).format('YYYY-MM-DD HH:mm');
+              },
               label(tooltipItem, myData) {
                 let label = myData.datasets[tooltipItem.datasetIndex].label || '';
                 if (label) {
