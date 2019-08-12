@@ -119,7 +119,7 @@ export default {
       this.pressure = [];
       this.altitude = [];
       this.$axios
-        .get(`https://meteo.alexanderkif.now.sh/data?start=${this.dateFrom}&finish=${this.dateTo}`)
+        .get(`https://meteo.alexanderkif.now.sh/data?start=${new Date(this.dateFrom).toISOString()}&finish=${new Date(this.dateTo).toISOString()}`)
         .then((response) => {
           const err = document.getElementById('error');
           if (response.data.result) {
@@ -137,10 +137,8 @@ export default {
           this.showReturnData = true;
           err.innerText = '';
           const { datasets } = response.data;
-          // console.log(response.data);
           datasets.forEach((dataset) => {
-            const timezone = (new Date().getTimezoneOffset()) * 60 * 1000;
-            const date = new Date(Date.parse(dataset._id) + timezone);
+            const date = new Date(Date.parse(dataset._id));
             this.temperature.push({
               t: new Date(date).valueOf(),
               y: +dataset.temperature,
