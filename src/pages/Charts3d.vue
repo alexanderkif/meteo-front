@@ -11,6 +11,7 @@
       <canvas id="temperatureChart" width="400" height="100" v-show="showReturnData"></canvas>
       <canvas id="humidityChart" width="400" height="100" v-show="showReturnData"></canvas>
       <canvas id="pressureChart" width="400" height="100" v-show="showReturnData"></canvas>
+      <canvas id="batteryChart" width="400" height="100" v-show="showReturnData"></canvas>
       <q-inner-loading :showing="visible">
         <q-spinner-gears size="20vh" color="primary" />
       </q-inner-loading>
@@ -49,6 +50,7 @@ export default {
       humidity: [],
       pressure: [],
       altitude: [],
+      battery: [],
       year: null,
       month: null,
       date: null,
@@ -83,6 +85,10 @@ export default {
             t: new Date(dataset._id).valueOf(),
             y: +dataset.pressure,
           });
+          this.battery.push({
+            t: new Date(dataset._id).valueOf(),
+            y: +dataset.battery,
+          });
           this.altitude.push({ x: dataset._id, y: +dataset.altitude });
         });
 
@@ -98,10 +104,15 @@ export default {
         const pressureChart = new Chart(ctxPressure,
           this.getChartCfg('Pressure', this.pressure, 'green', 'Pressure, mmHg'));
 
+        const ctxBattery = document.getElementById('batteryChart');
+        const batteryChart = new Chart(ctxBattery,
+          this.getChartCfg('Battery', this.battery, 'orange', 'Battery, V'));
+
         setInterval(() => {
           temperatureChart.update();
           humidityChart.update();
           pressureChart.update();
+          batteryChart.update();
         }, 1000 * 60 * 5);
 
         this.visible = false;

@@ -58,6 +58,7 @@
       <canvas id="temperatureChart" width="400" height="100" v-show="showReturnData"></canvas>
       <canvas id="humidityChart" width="400" height="100" v-show="showReturnData"></canvas>
       <canvas id="pressureChart" width="400" height="100" v-show="showReturnData"></canvas>
+      <canvas id="batteryChart" width="400" height="100" v-show="showReturnData"></canvas>
       <q-inner-loading :showing="visible">
         <q-spinner-gears size="10vh" color="primary" />
       </q-inner-loading>
@@ -95,6 +96,7 @@ export default {
       humidity: [],
       pressure: [],
       altitude: [],
+      battery: [],
       year: null,
       month: null,
       date: null,
@@ -108,6 +110,7 @@ export default {
       temperatureChart: null,
       humidityChart: null,
       pressureChart: null,
+      batteryChart: null,
     };
   },
   methods: {
@@ -118,6 +121,7 @@ export default {
       this.humidity = [];
       this.pressure = [];
       this.altitude = [];
+      this.battery = [];
       this.$axios
         .get(`https://meteo.alexanderkif.now.sh/data?start=${new Date(this.dateFrom).toISOString()}&finish=${new Date(this.dateTo).toISOString()}`)
         .then((response) => {
@@ -151,6 +155,10 @@ export default {
               t: new Date(date).valueOf(),
               y: +dataset.pressure,
             });
+            this.battery.push({
+              t: new Date(dataset._id).valueOf(),
+              y: +dataset.battery,
+            });
             this.altitude.push({ x: date, y: +dataset.altitude });
           });
 
@@ -165,6 +173,7 @@ export default {
           if (this.temperatureChart) this.temperatureChart.destroy();
           if (this.humidityChart) this.humidityChart.destroy();
           if (this.pressureChart) this.pressureChart.destroy();
+          if (this.batteryChart) this.batteryChart.destroy();
 
           this.temperatureChart = new Chart(document.getElementById('temperatureChart'),
             this.getChartCfg('Temperature', this.temperature, 'red', 'Temperature, *C', scaleFormat));
@@ -174,6 +183,9 @@ export default {
 
           this.pressureChart = new Chart(document.getElementById('pressureChart'),
             this.getChartCfg('Pressure', this.pressure, 'green', 'Pressure, mmHg', scaleFormat));
+
+          this.batteryChart = new Chart(document.getElementById('batteryChart'),
+            this.getChartCfg('Battery', this.battery, 'orange', 'Battery, V', scaleFormat));
 
           this.visible = false;
         })
