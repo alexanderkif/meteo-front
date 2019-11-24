@@ -5,6 +5,9 @@ A Quasar Framework app
 ## Example gh-pages
 https://alexanderkif.github.io/meteo-front/index.html
 
+## Backend meteo
+https://github.com/alexanderkif/meteo
+
 
 ## Install the dependencies
 ```bash
