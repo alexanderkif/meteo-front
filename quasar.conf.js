@@ -109,11 +109,11 @@ module.exports = function (ctx) {
       // workboxPluginMode: 'InjectManifest',
       // workboxOptions: {}, // only for NON InjectManifest
       manifest: {
-        // name: 'meteo',
-        // short_name: 'meteo',
+        name: 'Meteo',
+        short_name: 'Meteo',
         // description: 'A Quasar Framework app',
         display: 'standalone',
-        orientation: 'portrait',
+        orientation: 'any',
         background_color: '#ffffff',
         theme_color: '#027be3',
         icons: [
