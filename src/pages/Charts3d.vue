@@ -8,10 +8,10 @@
       <div class="page-date text-center" v-show="showReturnData">
         Measured from {{ year }}-{{ month }}-{{ date }} {{ hours }}:{{ minutes }} to now
       </div>
-      <canvas id="temperatureChart" width="400" height="100" v-show="showReturnData"></canvas>
-      <canvas id="humidityChart" width="400" height="100" v-show="showReturnData"></canvas>
-      <canvas id="pressureChart" width="400" height="100" v-show="showReturnData"></canvas>
-      <canvas id="batteryChart" width="400" height="100" v-show="showReturnData"></canvas>
+      <canvas id="temperatureChart" v-show="showReturnData"></canvas>
+      <canvas id="humidityChart" v-show="showReturnData"></canvas>
+      <canvas id="pressureChart" v-show="showReturnData"></canvas>
+      <canvas id="batteryChart" v-show="showReturnData"></canvas>
       <q-inner-loading :showing="visible">
         <q-spinner-gears size="20vh" color="primary" />
       </q-inner-loading>

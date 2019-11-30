@@ -55,10 +55,10 @@
         </div>
       </div>
       <div id="error" class="text-h4 text-negative"></div>
-      <canvas id="temperatureChart" width="400" height="100" v-show="showReturnData"></canvas>
-      <canvas id="humidityChart" width="400" height="100" v-show="showReturnData"></canvas>
-      <canvas id="pressureChart" width="400" height="100" v-show="showReturnData"></canvas>
-      <canvas id="batteryChart" width="400" height="100" v-show="showReturnData"></canvas>
+      <canvas id="temperatureChart" v-show="showReturnData"></canvas>
+      <canvas id="humidityChart" v-show="showReturnData"></canvas>
+      <canvas id="pressureChart" v-show="showReturnData"></canvas>
+      <canvas id="batteryChart" v-show="showReturnData"></canvas>
       <q-inner-loading :showing="visible">
         <q-spinner-gears size="10vh" color="primary" />
       </q-inner-loading>

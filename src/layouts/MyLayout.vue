@@ -1,6 +1,6 @@
 <template>
   <q-layout view="lHh Lpr lFf">
-    <q-header elevated>
+    <q-header reveal elevated>
       <q-toolbar>
         <q-btn
           flat
@@ -20,7 +20,7 @@
       </q-toolbar>
     </q-header>
 
-    <q-footer>
+    <q-footer reveal elevated>
       <q-tabs>
         <q-route-tab
           v-for="nav in navs"
