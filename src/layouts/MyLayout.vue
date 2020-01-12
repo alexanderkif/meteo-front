@@ -87,7 +87,7 @@ export default {
           to: '/charts3d',
         },
         {
-          label: 'Range (max 60 days)',
+          label: 'Range (max 73 points)',
           icon: 'date_range',
           to: '/charts-range',
         },

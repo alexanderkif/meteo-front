@@ -62,7 +62,7 @@ export default {
   },
   created() {
     const START = new Date(new Date() - 1000 * 60 * 60 * 24 * 3).toISOString();
-    this.$axios.get(`https://meteo.alexanderkif.now.sh/data?start=${START}`)
+    this.$axios.get(`https://meteo.alexanderkif.now.sh/data?start=${START}&tframe=hour&step=1`)
       .then((response) => {
         const start = new Date(response.data.start);
         this.year = start.getFullYear();

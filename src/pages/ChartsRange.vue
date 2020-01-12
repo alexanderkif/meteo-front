@@ -5,52 +5,82 @@
     leave-active-class="animated fadeOut"
   >
     <q-page class="flex flex-center">
-      <div class="page-date text-center">
-        From
-        <div class="q-pa-md" style="max-width: 300px; display: inline-block">
-          <q-input filled v-model="dateFrom">
-            <template v-slot:prepend>
-              <q-icon name="event" class="cursor-pointer">
-                <q-popup-proxy ref="qDateFromProxy" transition-show="scale" transition-hide="scale">
-                  <q-date v-model="dateFrom" mask="YYYY-MM-DD HH:mm"
-                    @input="() => $refs.qDateFromProxy.hide()" />
-                </q-popup-proxy>
-              </q-icon>
-            </template>
+      <div class="q-pa-sm">
+        <div class="row justify-center">
+          <div>
+            <div class="row justify-center">
+              <q-input filled v-model="dateFrom" style="max-width: 250px" class="q-pa-sm">
+                <template v-slot:prepend>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy ref="qDateFromProxy" transition-show="scale"
+                      transition-hide="scale">
+                      <q-date v-model="dateFrom" mask="YYYY-MM-DD HH:mm"
+                        @input="() => $refs.qDateFromProxy.hide()" />
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
 
-            <template v-slot:append>
-              <q-icon name="access_time" class="cursor-pointer">
-                <q-popup-proxy ref="qTimeFromProxy" transition-show="scale" transition-hide="scale">
-                  <q-time v-model="dateFrom" mask="YYYY-MM-DD HH:mm" format24h
-                    @input="() => $refs.qTimeFromProxy.hide()" />
-                </q-popup-proxy>
-              </q-icon>
-            </template>
-          </q-input>
-        </div>
-        to
-        <div class="q-pa-md" style="max-width: 300px; display: inline-block">
-          <q-input filled v-model="dateTo">
-            <template v-slot:prepend>
-              <q-icon name="event" class="cursor-pointer">
-                <q-popup-proxy ref="qDateToProxy" transition-show="scale" transition-hide="scale">
-                  <q-date v-model="dateTo" mask="YYYY-MM-DD HH:mm"
-                    @input="() => $refs.qDateToProxy.hide()" />
-                </q-popup-proxy>
-              </q-icon>
-            </template>
+                <template v-slot:append>
+                  <q-icon name="access_time" class="cursor-pointer">
+                    <q-popup-proxy ref="qTimeFromProxy" transition-show="scale"
+                      transition-hide="scale">
+                      <q-time v-model="dateFrom" mask="YYYY-MM-DD HH:mm" format24h
+                        @input="() => $refs.qTimeFromProxy.hide()" />
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
+              <q-input filled v-model="dateTo" style="max-width: 250px" class="q-pa-sm">
+                <template v-slot:prepend>
+                  <q-icon name="event" class="cursor-pointer">
+                    <q-popup-proxy ref="qDateToProxy" transition-show="scale"
+                      transition-hide="scale">
+                      <q-date v-model="dateTo" mask="YYYY-MM-DD HH:mm"
+                        @input="() => $refs.qDateToProxy.hide()" />
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
 
-            <template v-slot:append>
-              <q-icon name="access_time" class="cursor-pointer">
-                <q-popup-proxy ref="qTimeToProxy" transition-show="scale" transition-hide="scale">
-                  <q-time v-model="dateTo" mask="YYYY-MM-DD HH:mm" format24h
-                    @input="() => $refs.qTimeToProxy.hide()" />
-                </q-popup-proxy>
-              </q-icon>
-            </template>
-          </q-input>
+                <template v-slot:append>
+                  <q-icon name="access_time" class="cursor-pointer">
+                    <q-popup-proxy ref="qTimeToProxy" transition-show="scale"
+                      transition-hide="scale">
+                      <q-time v-model="dateTo" mask="YYYY-MM-DD HH:mm" format24h
+                        @input="() => $refs.qTimeToProxy.hide()" />
+                    </q-popup-proxy>
+                  </q-icon>
+                </template>
+              </q-input>
+            </div>
+          </div>
+          <div>
+            <div class="row justify-center">
+              <q-select
+                class="q-pa-sm"
+                filled
+                v-model="TFRAME"
+                :options="tframe_units"
+                label="Time units"
+                transition-show="flip-up"
+                transition-hide="flip-down"
+                style="width: 250px"
+                @input="changeTframe"
+              />
+              <q-select
+                class="q-pa-sm"
+                filled v-model="TSTEP"
+                :options="tstep_units"
+                label="Time steps"
+                transition-show="flip-up"
+                transition-hide="flip-down"
+                style="width: 250px"
+              />
+            </div>
+          </div>
         </div>
-        <div class="q-pa-md q-gutter-sm" style="display: inline-block">
+      </div>
+      <div class="q-pb-md fit">
+        <div class="row justify-center">
           <q-btn color="primary" label="Get data" @click="getData"/>
         </div>
       </div>
@@ -72,14 +102,6 @@
   box-shadow: none;
   width: 100%;
   align-self: flex-start;
-}
-.card-datasets {
-  width: 180px;
-  height: 160px;
-
-  .card-data {
-    font-size: 2rem;
-  }
 }
 </style>
 
@@ -111,9 +133,32 @@ export default {
       humidityChart: null,
       pressureChart: null,
       batteryChart: null,
+      TFRAME: 'minute',
+      tframe_units: ['minute', 'hour', 'day', 'month'],
+      TSTEP: 5,
+      tstep_units: [5, 10, 15, 20, 30],
     };
   },
   methods: {
+    changeTframe() {
+      switch (this.TFRAME) {
+        case 'minute':
+          this.tstep_units = [5, 10, 15, 20, 30];
+          break;
+        case 'hour':
+          this.tstep_units = [1, 2, 3, 4, 6, 12];
+          break;
+        case 'day':
+          this.tstep_units = [1, 2, 3, 8, 11, 16];
+          break;
+        case 'month':
+          this.tstep_units = [1, 2, 3, 4, 6];
+          break;
+        default:
+          break;
+      }
+      [this.TSTEP] = this.tstep_units;
+    },
     getData() {
       this.visible = true;
       this.showReturnData = false;
@@ -122,8 +167,10 @@ export default {
       this.pressure = [];
       this.altitude = [];
       this.battery = [];
+      const START = new Date(this.dateFrom).toISOString();
+      const FINISH = new Date(this.dateTo).toISOString();
       this.$axios
-        .get(`https://meteo.alexanderkif.now.sh/data?start=${new Date(this.dateFrom).toISOString()}&finish=${new Date(this.dateTo).toISOString()}`)
+        .get(`https://meteo.alexanderkif.now.sh/data?start=${START}&finish=${FINISH}&tframe=${this.TFRAME}&step=${this.TSTEP}`)
         .then((response) => {
           const err = document.getElementById('error');
           if (response.data.result) {
