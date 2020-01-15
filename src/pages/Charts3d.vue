@@ -120,7 +120,7 @@ export default {
       })
       .catch((err) => {
         this.lorem = err;
-        console.log(err);
+        // console.log(err);
         this.$q.notify({
           color: 'negative',
           position: 'top',

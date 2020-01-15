@@ -26,8 +26,11 @@
           v-for="nav in navs"
           :key="nav.label"
           :to="nav.to"
-          :icon="nav.icon"
-          :label="nav.label" />
+          :icon="nav.icon" >
+          <q-tooltip>
+            {{ nav.label }}
+          </q-tooltip>
+        </q-route-tab>
       </q-tabs>
     </q-footer>
 

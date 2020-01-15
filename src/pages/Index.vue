@@ -3,26 +3,8 @@
     <div class="page-date text-center" v-show="showReturnData">
       Measured {{ year }}-{{ month }}-{{ date }} at {{ hours }}:{{ minutes }}
     </div>
+    <temperature :value="temperature"></temperature>
     <q-page class="flex flex-center">
-      <q-card class="bg-grey-3 relative-position card-datasets">
-        <q-card-section>
-          <div class="text-h6 text-center">Temperature,</div>
-          <div class="text-h6 text-center">&deg;C</div>
-        </q-card-section>
-
-        <q-card-section>
-          <transition
-            appear
-            enter-active-class="animated fadeIn"
-            leave-active-class="animated fadeOut"
-          >
-            <div class="card-data text-center" v-show="showReturnData">
-              {{ temperature }}
-            </div>
-          </transition>
-        </q-card-section>
-      </q-card>
-
       <q-card class="bg-grey-3 relative-position card-datasets">
         <q-card-section>
           <div class="text-h6 text-center">Humidity,</div>
@@ -105,8 +87,13 @@
 </style>
 
 <script>
+import Temperature from '../components/temperature';
+
 export default {
   name: 'MeteoNow',
+  components: {
+    Temperature,
+  },
   data() {
     return {
       temperature: null,
@@ -142,7 +129,7 @@ export default {
       })
       .catch((err) => {
         this.lorem = err;
-        console.log(err);
+        // console.log(err);
         this.$q.notify({
           color: 'negative',
           position: 'top',
