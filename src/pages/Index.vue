@@ -1,70 +1,15 @@
 <template>
-  <q-page class="flex flex-center">
+  <q-page class="col flex flex-center">
+    <temperature class="q-ma-md bg-grey-3" :value="temperature"></temperature>
+    <humidity class="q-ma-md bg-grey-3" :value="humidity"></humidity>
+    <pressure class="q-ma-md bg-grey-3" :value="pressure"></pressure>
+    <battery class="q-ma-md bg-grey-3" :value="battery"></battery>
     <div class="page-date text-center" v-show="showReturnData">
       Measured {{ year }}-{{ month }}-{{ date }} at {{ hours }}:{{ minutes }}
     </div>
-    <temperature :value="temperature"></temperature>
-    <q-page class="flex flex-center">
-      <q-card class="bg-grey-3 relative-position card-datasets">
-        <q-card-section>
-          <div class="text-h6 text-center">Humidity,</div>
-          <div class="text-h6 text-center">%</div>
-        </q-card-section>
-
-        <q-card-section>
-          <transition
-            appear
-            enter-active-class="animated fadeIn"
-            leave-active-class="animated fadeOut"
-          >
-            <div class="card-data text-center" v-show="showReturnData">
-              {{ humidity }}
-            </div>
-          </transition>
-        </q-card-section>
-      </q-card>
-
-      <q-card class="bg-grey-3 relative-position card-datasets">
-        <q-card-section>
-          <div class="text-h6 text-center">Pressure,</div>
-          <div class="text-h6 text-center">mmHg</div>
-        </q-card-section>
-
-        <q-card-section>
-          <transition
-            appear
-            enter-active-class="animated fadeIn"
-            leave-active-class="animated fadeOut"
-          >
-            <div class="card-data text-center" v-show="showReturnData">
-              {{ pressure }}
-            </div>
-          </transition>
-        </q-card-section>
-      </q-card>
-      <q-card class="bg-grey-3 relative-position card-datasets">
-        <q-card-section>
-          <div class="text-h6 text-center">Altitude,</div>
-          <div class="text-h6 text-center">meters</div>
-        </q-card-section>
-
-        <q-card-section>
-          <transition
-            appear
-            enter-active-class="animated fadeIn"
-            leave-active-class="animated fadeOut"
-          >
-            <div class="card-data text-center" v-show="showReturnData">
-              {{ altitude }}
-            </div>
-          </transition>
-        </q-card-section>
-      </q-card>
-
-      <q-inner-loading :showing="visible">
-        <q-spinner-gears size="20vh" color="primary" />
-      </q-inner-loading>
-    </q-page>
+    <q-inner-loading :showing="visible">
+      <q-spinner-gears size="20vh" color="primary" />
+    </q-inner-loading>
   </q-page>
 </template>
 
@@ -88,18 +33,24 @@
 
 <script>
 import Temperature from '../components/temperature';
+import Humidity from '../components/humidity';
+import Pressure from '../components/pressure';
+import Battery from '../components/battery';
 
 export default {
   name: 'MeteoNow',
   components: {
     Temperature,
+    Humidity,
+    Pressure,
+    Battery,
   },
   data() {
     return {
       temperature: null,
       humidity: null,
       pressure: null,
-      altitude: null,
+      battery: null,
       year: null,
       month: null,
       date: null,
@@ -117,7 +68,7 @@ export default {
         this.temperature = response.data.lastDataset.temperature;
         this.humidity = response.data.lastDataset.humidity;
         this.pressure = response.data.lastDataset.pressure;
-        this.altitude = response.data.lastDataset.altitude;
+        this.battery = response.data.lastDataset.battery;
         const created = new Date(response.data.lastDataset.created);
         this.year = created.getFullYear();
         this.month = this.addZeroIfNeed(created.getMonth() + 1);
