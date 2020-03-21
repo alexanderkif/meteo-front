@@ -41,6 +41,7 @@
 import Chart from 'chart.js';
 import { setInterval } from 'timers';
 import moment from 'moment';
+import dataJSON from '../../data.json';
 
 export default {
   name: 'MeteoCharts',
@@ -61,7 +62,7 @@ export default {
     };
   },
   created() {
-    this.$axios.get('https://meteo.alexanderkif.now.sh/data?tframe=minute&step=5')
+    this.$axios.get(`${dataJSON.urlAPI}/data?tframe=minute&step=5`)
       .then((response) => {
         const start = new Date(response.data.start);
         this.year = start.getFullYear();

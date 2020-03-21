@@ -36,6 +36,7 @@ import Temperature from '../components/temperature';
 import Humidity from '../components/humidity';
 import Pressure from '../components/pressure';
 import Battery from '../components/battery';
+import dataJSON from '../../data.json';
 
 export default {
   name: 'MeteoNow',
@@ -63,7 +64,7 @@ export default {
   created() {
     this.visible = true;
     this.showReturnData = false;
-    this.$axios.get('https://meteo.alexanderkif.now.sh')
+    this.$axios.get(dataJSON.urlAPI)
       .then((response) => {
         this.temperature = response.data.lastDataset.temperature;
         this.humidity = response.data.lastDataset.humidity;

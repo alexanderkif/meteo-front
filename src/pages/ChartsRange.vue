@@ -109,6 +109,7 @@
 /* eslint-disable no-underscore-dangle */
 import Chart from 'chart.js';
 import moment from 'moment';
+import dataJSON from '../../data.json';
 
 export default {
   name: 'MeteoCharts3d',
@@ -170,7 +171,7 @@ export default {
       const START = new Date(this.dateFrom).toISOString();
       const FINISH = new Date(this.dateTo).toISOString();
       this.$axios
-        .get(`https://meteo.alexanderkif.now.sh/data?start=${START}&finish=${FINISH}&tframe=${this.TFRAME}&step=${this.TSTEP}`)
+        .get(`${dataJSON.urlAPI}/data?start=${START}&finish=${FINISH}&tframe=${this.TFRAME}&step=${this.TSTEP}`)
         .then((response) => {
           const err = document.getElementById('error');
           if (response.data.result) {
