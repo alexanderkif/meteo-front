@@ -134,9 +134,9 @@ export default {
       humidityChart: null,
       pressureChart: null,
       batteryChart: null,
-      TFRAME: 'minute',
+      TFRAME: 'hour',
       tframe_units: ['minute', 'hour', 'day', 'month'],
-      TSTEP: 5,
+      TSTEP: 12,
       tstep_units: [5, 10, 15, 20, 30],
     };
   },
