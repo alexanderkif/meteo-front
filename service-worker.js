@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/4.3.1/workbox-sw.js");
 
 importScripts(
-  "precache-manifest.51467a89e4e26193222bd069551613a9.js"
+  "precache-manifest.f5704b75ff83974f398ea84cfcba37d6.js"
 );
 
 workbox.core.setCacheNameDetails({prefix: "meteo-front"});
